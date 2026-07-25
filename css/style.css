@@ -68,7 +68,7 @@ nav {
   flex-wrap: wrap;
   gap: 12px 16px;              /* Чуть компактнее отступы для кнопок */
   margin-top: 28px;
-  font-size: 14px;             /* Сделаем шрифт более строгим и аккуратным */
+  font-size: 15px;             /* Сделаем шрифт более строгим и аккуратным */
   font-weight: 600;
   font-family: monospace;      /* Настоящий хакерский моноширинный шрифт */
   letter-spacing: 1px;
@@ -189,11 +189,12 @@ nav a.active {
 
 /* Стили иконки (Внутренний квадрат) */
 .card .thumbnail {
+  
   width: 100%;
   aspect-ratio: 1 / 1;
   /* Более глубокий серый цвет подложки иконки */
   background: #242424; 
-  border-radius: 8px;
+  border-radius: 8px; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,7 +202,11 @@ nav a.active {
   color: #F5C542;
   margin-bottom: 12px;
   transition: color 0.25s ease;
+  overflow: hidden;
+  
 }
+
+
 
 /* Глитч иконки при наведении (Ваша фишка) */
 .card:hover .thumbnail {
@@ -212,10 +217,10 @@ nav a.active {
 
 /* Текст заголовка постов внутри карточки */
 .card .title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 500;
   /* Мягкий светло-серый цвет текста в тон вашей новой палитре */
-  color: #b1b1b1; 
+  color: #e7ca7a; 
   line-height: 1.3;
 }
 
@@ -385,7 +390,7 @@ footer {
 .post-content h3 {
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 700;
-  font-size: 14px;        
+  font-size: 16px;        
   /* Меняем токсично-зеленый на благородный приглушенный золотисто-желтый */
   color: #e7ca7a;         
   margin-top: 36px;
@@ -695,5 +700,142 @@ main {
 .post-content > *.reveal-active {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Меню навигации по публикациям */
+.post-wrapper {
+  display: flex;
+  justify-content: center; /* выравниваем по центру */
+  gap: 0; /* убираем gap, чтобы не сжимал */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.post-content {
+  flex: 1 1 100%;
+  max-width: 100%; /* занимает всю ширину */
+}
+
+.post-toc {
+  flex: 0 0 220px;
+  position: sticky;
+  top: 100px;
+  align-self: flex-start;
+  margin-left: -240px; /* смещаем влево, чтобы не сжимал контент */
+  background: #0B0E14;
+  border: 1px solid #2A3344;
+  border-radius: 12px;
+  padding: 20px 16px;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+/* Стилизация скроллбара */
+.post-toc::-webkit-scrollbar {
+  width: 3px;
+}
+.post-toc::-webkit-scrollbar-track {
+  background: transparent;
+}
+.post-toc::-webkit-scrollbar-thumb {
+  background: #F5C542;
+  border-radius: 10px;
+}
+
+.post-toc h4 {
+  color: #A8C7FF;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #2A3344;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(168, 199, 255, 0.3);
+}
+
+.post-toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-toc ul li {
+  margin: 2px 0;
+}
+
+.post-toc ul li a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #D0B84A;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  font-weight: 400;
+  line-height: 1.4;
+  border-left: 2px solid transparent;
+  text-shadow: 0 0 8px rgba(208, 184, 74, 0.15);
+}
+
+.post-toc ul li a:hover {
+  color: #F5C542;
+  background: rgba(245, 197, 66, 0.08);
+  border-left-color: #F5C542;
+  text-shadow: 0 0 16px rgba(245, 197, 66, 0.4);
+}
+
+.post-toc ul li a.active {
+  color: #F5C542;
+  background: rgba(245, 197, 66, 0.08);
+  border-left-color: #F5C542;
+  font-weight: 500;
+  text-shadow: 0 0 20px rgba(245, 197, 66, 0.5);
+}
+
+.post-toc ul li ul {
+  padding-left: 14px;
+}
+
+.post-toc ul li ul li a {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 900px) {
+  .post-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .post-content {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .post-toc {
+    position: relative;
+    top: 0;
+    flex: 0 0 auto;
+    width: 100%;
+    max-height: 300px;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .post-toc {
+    max-height: 200px;
+    padding: 14px 12px;
+  }
+  .post-toc ul li a {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
 }
 

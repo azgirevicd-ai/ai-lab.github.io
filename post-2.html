@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Lab — Бенчмарк модели Qwen 2.5</title>
+  
+  <!-- ИСПРАВЛЕНО: Правильное и полное подключение худых кибер-шрифтов от Google -->
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <canvas id="neuro-canvas"></canvas>
+  <div class="header-container">
+    <h1 class="matrix-title">AI Lab⚙️</h1>
+    <div class="subtitle">«Лучшее — враг хорошего.»</div>
+    <nav>
+      <a href="index.html">🧬 HOME</a>
+      <a href="EXPERIMENTS.html">🔬 EXPERIMENTS</a>
+      <a href="ENGINEERING.html" class="category-btn active" data-category="ENGINEERING">⚙️ ENGINEERING</a>
+      <a href="SECURITY.html">🛡️ SECURITY</a>
+      <a href="IDEAS.html">💡 IDEAS</a>
+      <a href="about.html">📩 ABOUT</a>
+    </nav>
+  </div>
+</header>
+
+<main class="post-main-container">
+
+  <!-- 1. Отдельный изолированный блок для названия темы -->
+ <div class="post-title-card">
+  <h1>Бенчмарк локальной модели: полный гайд</h1>
+</div>
+
+  <!-- 3. Основной блок контента -->
+  <article class="post-content">
+<div class="spec-grid" style="margin-bottom: 24px;">
+  <!-- Живые дата и время -->
+  <div class="spec-item"><strong>SESSION_TIME:</strong> <span id="live-clock" style="color: #F5C542;">CONNECTING...</span></div>
+  <div class="spec-item"><strong>SESSION_DATE:</strong> <span id="live-date" style="color: #F5C542;">SYNCING...</span></div>
+  
+  <!-- IP-адрес посетителя -->
+  <div class="spec-item"><strong>REMOTE_ADDR:</strong> <span id="user-ip" style="color: #00ff66; font-weight: bold;">[SCANNING...]</span></div>
+  <div class="spec-item"><strong>REMOTE_LOC:</strong> <span id="user-geo" style="color: #A8C7FF;">[LOCATING...]</span></div>
+ </div>
+
+ <a href="#" class="back-link" onclick="if(document.referrer) { history.back(); return false; } else { window.location.href='index.html'; return false; }">
+      ⟵ Back
+    </a>
+    
+<img src="images/pub2/olama.png" alt="Ollama Logo" style="width: 200px; height: 200px; float: left; margin-right: 20px; margin-bottom: 10px; border-radius: 15px;">
+<h3>[ ЧТО ТАКОЕ БЕНЧМАРК И ЗАЧЕМ ОН НУЖЕН ]</h3>
+<p><strong>Бенчмарк</strong> — это набор стандартных вопросов и задач, по которым можно сравнивать разные модели.</p>
+<p>Вместо того чтобы задать 10 вопросов вручную, бенчмарк прогоняет модель через сотни и тысячи примеров и выдаёт точный процент правильных ответов.</p>
+<p>Мы будем использовать <strong>LM-Evaluation-Harness</strong> от EleutherAI — главный инструмент для тестирования открытых моделей.</p>
+
+  <h3>[ КАКИЕ ТЕСТЫ ЕСТЬ ВНУТРИ ]</h3>
+  <li><strong>gsm8k</strong> - Математические задачи в несколько шагов</li>
+  <li><strong>mmlu</strong> - Общие знания (57 тем, от истории до физики)</li>
+  <li><strong>truthfulqa</strong> - Честность модели (не выдаёт ложные факты)</li>
+  <li><strong>arc_easy</strong> - Логика и рассуждения (уровень школьных тестов)</li>
+</ul>
+
+<h3>[ ПОСТАНОВКА ЗАДАЧИ ]</h3>
+<p><strong>Цель:</strong> Узнать объективный уровень способностей модели, чтобы принимать решения на основе данных, а не интуиции.</p>
+
+<ul>
+<li>Точка отсчёта (базовый уровень)</li>
+<li>Выявление слабых мест</li>
+<li>Сравнение с другими моделями</li>
+<li>Подтверждение гипотез</li>
+<li>Документирование прогресса</li>
+<li>Создание базы для дальнейших шагов</li>
+</ul>
+
+
+<h3>[ ЧТО НУЖНО ДЛЯ ЗАПУСКА ТЕСТА ]</h3>
+    <p><strong>Минимальные требования:</strong></p>
+    <ul>
+        <li>Видеокарта с 6+ ГБ VRAM</li>
+        <li>16 ГБ оперативной памяти</li>
+        <li>20 ГБ свободного места на диске</li>
+    </ul>
+    <p><strong>Программы:</strong></p>
+    <ul>
+        <li><code>Git</code> — для скачивания репозитория</li>
+
+        <details style="margin: 15px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: #1a1a1a; color: #ccc;">
+  <summary style="cursor: pointer; padding: 6px; user-select: none;">
+    
+    🪜 GIT ПОШАГОВАЯ ИНСТРУКЦИЯ(нажми, чтобы развернуть)
+  </summary>
+  <div style="margin-top: 10px;">
+
+    <p>Вот как пройти установщик, чтобы у вас всё работало.</p>
+    <ol>
+      <li><strong>Начало установки:</strong> Скачайте и запустите установщик с официального сайта <strong>git-scm.com.</strong>.</li>
+      <li><strong>Выбор редактора:</strong> Здесь есть один важный момент. Vim — мощный, но сложный редактор. Рекомендую выбрать <strong>"Use the Nano editor by default"</strong> 
+        (самый простой текстовый редактор, который работает из командной строки) . Не пугайтесь, если не знаете его — в рамках начальной работы он подойдёт идеально.</strong> .</li>
+      <li><strong>Настройка имени ветки:</strong> Оставьте "Let Git decide" (или "Override the default" с main). Это современный стандарт, и в наших экспериментах это не играет роли.</li>
+      <li><strong>Самое важное: настройка PATH:</strong> Это критично, чтобы Git работал из командной строки. На экране <strong>"Adjusting your PATH environment" </strong>
+        выберите <strong>"Git from the command line and also from 3rd-party software"</strong>.</li>
+      <li><strong>Остальные шаги:</strong> После этого вы увидите примерно 7-8 экранов с настройками для SSH, SSL, преобразования строк, терминала и т.д.
+         Смело нажимайте <strong>"Next" </strong>на всех этих экранах, ничего не меняя . Все значения по умолчанию подходят для 99% пользователей. .</li>
+      <li><strong>Конец установки:</strong> После установки закройте все открытые окна командной строки и откройте новое, чтобы изменения вступили в силу. 
+        Введите команду <code>git --version</code>. Если вы увидели номер версии, вы справились!</strong></li>
+    </ol>
+  </div>
+</details>
+
+
+        <li><code>Python 3.10+</code> — среда выполнения</li>
+        <li><code>Ollama</code> — с загруженной моделью (например, <code>qwen-ru</code>)</li>
+    </ul>
+
+
+<h3>[ ШАГ 1: КЛОНИРУЕМ ИНСТРУМЕНТ ]</h3>
+<p><strong>LM-Evaluation-Harness</strong> — это библиотека от EleutherAI. Именно с её помощью исследователи проверяют модели перед тем, как выложить их в открытый доступ.</p>
+<p>Откройте терминал и выполните:</p>
+<pre><code>git clone --depth 1 https://github.com/EleutherAI/lm-evaluation-harness.git
+cd lm-evaluation-harness</code></pre>
+<p>Флаг <code>--depth 1</code> скачивает только последнюю версию, без всей истории — быстрее и легче.</p>
+
+<h3>[ ШАГ 2: СОЗДАЁМ ВИРТУАЛЬНОЕ ОКРУЖЕНИЕ ]</h3>
+<p>Виртуальное окружение изолирует Python-зависимости для этого проекта, чтобы они не конфликтовали с другими программами.</p>
+<pre><code>python -m venv .venv
+.venv\Scripts\activate   # Windows
+source .venv/bin/activate # Mac/Linux</code></pre>
+<p>После активации в начале строки появится <code>(.venv)</code>. Это значит, что всё работает.</p>
+
+<h3>[ ШАГ 3: УСТАНАВЛИВАЕМ БИБЛИОТЕКИ ]</h3>
+<p>Устанавливаем сам инструмент и дополнительные зависимости для работы с Hugging Face и API.</p>
+<pre><code>pip install -e .
+pip install "lm_eval[hf,api]"</code></pre>
+<p><code>pip install -e .</code> устанавливает пакет в режиме разработки — так удобнее, если вы захотите вносить изменения в код инструмента.</p>
+
+<h3>[ ШАГ 4: ЗАПУСКАЕМ ТЕСТ ]</h3>
+<p>Перед запуском убедитесь, что Ollama запущен и модель загружена:</p>
+<pre><code>ollama list</code></pre>
+<p>Если вашей модели нет в списке — загрузите её:</p>
+<pre><code>ollama pull <code>"Название модели"</code></pre>
+<p>Теперь сам тест. Команда для запуска <code>gsm8k</code> — теста на математические задачи:</p>
+<pre><code>lm_eval --model local-chat-completions --model_args model=qwen-ru^
+ base_url=http://localhost:11434/v1/chat/completions,num_concurrent=1,tokenized_requests=False^
+ --tasks gsm8k --apply_chat_template --output_path results/ --log_samples --limit 100</code></pre>
+
+<p><strong>Разбор параметров:</strong></p>
+<ul>
+  <li><code>--model local-chat-completions</code> — подключаемся к локальному серверу через API чата.</li>
+  <li><code>model=qwen-ru</code> — имя модели в Ollama (замените на свою).</li>
+  <li><code>base_url=http://localhost:11434/v1/chat/completions</code> — адрес сервера.</li>
+  <li><code>num_concurrent=1</code> — один запрос за раз (снижает нагрузку).</li>
+  <li><code>--tasks gsm8k</code> — выбираем тест на математику.</li>
+  <li><code>--apply_chat_template</code> — применяет стандартный шаблон чата.</li>
+  <li><code>--output_path results/</code> — папка для результатов.</li>
+  <li><code>--log_samples</code> — сохраняет все ответы модели (чтобы анализировать ошибки).</li>
+  <li><code>--limit 100</code> — берём только 100 вопросов (быстрая проверка).</li>
+</ul>
+<p><strong>Рекомендация</strong> Следите за температурой видеокарты , у меня она не превышала 84 градуса.</p>
+
+
+
+<h3>[ ШАГ 5: РЕЗУЛЬТАТЫ ТЕСТА ]</h3>
+<p>После завершения теста в папке <code>results/</code> появятся файлы:</p>
+<ul>
+  <li><code>results_gsm8k.json</code> — общая статистика.</li>
+  <li><code>samples_gsm8k.json</code> — каждый вопрос, ответ модели и правильный ответ.</li>
+</ul>
+
+<p>В консоли вы увидите таблицу, например:</p>
+  <img src="images/pub2/test_gsm8k.png" alt="Ollama Logo" style="width: 650px; height: 80px; margin-right: 20px; margin-bottom: 10px; border-radius: 5px;">
+
+<p><strong>Как читать результат:</strong></p>
+<ul>
+  <li><code>Value = 0.81</code> — модель правильно ответила на <strong>81%</strong> вопросов (при мягкой проверке).</li>
+  <li><code>Filter = strict-match</code> — строгая проверка, ответ должен совпадать дословно.</li>
+  <li>Разница между мягкой и строгой проверкой показывает, насколько модель аккуратна в формулировках.</li>
+</ul>
+
+<h3>[ МОИ РЕЗУЛЬТАТЫ ]</h3>
+<table style="width:100%; border-collapse:collapse; margin:20px 0;">
+  <tr style="background:#1a1a1a;">
+    <th style="padding:10px; border:1px solid #444;">Тест</th>
+    <th style="padding:10px; border:1px solid #444;">Количество вопросов</th>
+    <th style="padding:10px; border:1px solid #444;">Мягкая проверка</th>
+    <th style="padding:10px; border:1px solid #444;">Строгая проверка</th>
+  </tr>
+  <tr>
+    <td style="padding:10px; border:1px solid #444;">gsm8k</td>
+    <td style="padding:10px; border:1px solid #444;">1319</td>
+    <td style="padding:10px; border:1px solid #444;">78%</td>
+    <td style="padding:10px; border:1px solid #444;">44%</td>
+  </tr>
+  <tr>
+    <td style="padding:10px; border:1px solid #444;">gsm8k</td>
+    <td style="padding:10px; border:1px solid #444;">100</td>
+    <td style="padding:10px; border:1px solid #444;">81%</td>
+    <td style="padding:10px; border:1px solid #444;">48%</td>
+  </tr>
+</table>
+
+<p><strong>Вывод:</strong> разница между 100 и 1319 вопросами составила всего 2–4% — это означает, что <strong>100 вопросов достаточно для быстрой оценки</strong>. Экономия времени и ресурсов — в разы.</p>
+
+<h3>[ ОСОБЫЙ СЛУЧАЙ: ТЕСТ НА ЧЕСТНОСТЬ ]</h3>
+<p>Тест <code>truthfulqa</code> проверяет, насколько модель склонна выдавать ложные факты и галлюцинировать. Это важно, если вы хотите, чтобы модель была честной.</p>
+
+<p>Однако при запуске <code>truthfulqa</code> через чат-интерфейс возникает ошибка:</p>
+<pre><code>NotImplementedError: Loglikelihood is not supported for chat completions.</code></pre>
+
+<p><strong>Почему:</strong> тест требует вычисления <strong>логарифмической вероятности</strong> — метода, который не поддерживается для моделей, работающих через Ollama.</p>
+
+<p><strong>Решение:</strong> вместо <code>truthfulqa</code> используйте его версию с генерацией — <code>truthfulqa_gen</code>:</p>
+<pre><code>lm_eval --model local-chat-completions --model_args model=qwen-ru^
+ base_url=http://localhost:11434/v1/chat/completions,num_concurrent=1,tokenized_requests=False^
+ --tasks truthfulqa_gen --apply_chat_template --output_path results/ --log_samples --limit 100</code></pre>
+
+
+<p><strong>Мои результаты на truthfulqa_gen:</strong></p>
+<pre><code>bleu_acc: 18%
+rouge1_acc: 17%
+rougeL_acc: 17%</code></pre>
+<p>Это означает, что модель правильно отвечает примерно в <strong>18%</strong> случаев. Для локальной 7B-модели это нормально, но потенциал для улучшения есть — через системный промт или дообучение.</p>
+
+
+
+<h3>[ КОНТРОЛЬ ТЕМПЕРАТУРЫ И НАГРУЗКИ ]</h3>
+<p>Во время теста видеокарта загружается на 80–100%. Температура держится в районе <strong>83–85°C</strong> — это безопасный диапазон для современных видеокарт.</p>
+<p><strong>Совет:</strong></p>
+<ul>
+  <li>Следите за температурой через <strong>MSI Afterburner</strong> или <strong>GPU-Z</strong>.</li>
+  <li>При длительных тестах обеспечьте хорошую вентиляцию корпуса.</li>
+  <li>Если температура превышает 90°C — сделайте паузу.</li>
+</ul>
+<p>На скриншоте ниже видно, как тест нагружает систему:</p>
+
+<img src="images/pub2/test.png" alt="Ollama Logo" style="width: 1000px; height: 450px; margin-right: 20px; margin-bottom: 10px; border-radius: 5px;">
+
+
+<h3>[ ИТОГ ]</h3>
+
+<p><strong>Результаты тестов на 100 вопросов:</strong></p>
+<pre>Математические задачи gsm8k: 81% , 48%
+Честность модели truthfulqa 18%</pre>
+
+
+
+  
+<p>Мы прошли полный цикл тестирования:</p>
+<ul>
+  <li>Установили <code>lm-evaluation-harness</code></li>
+  <li>Запустили тест на логику (<code>gsm8k</code>) и на честность (<code>truthfulqa_gen</code>)</li>
+  <li>Получили точные цифры и поняли слабые места модели</li>
+  <li>Доказали, что 100 вопросов достаточно для быстрой оценки</li>
+</ul>
+
+<p><strong>Что дальше?</strong></p>
+<ul>
+  <li>Использовать результаты как точку отсчёта</li>
+  <li>Попробовать улучшить модель через системный промт</li>
+  <li>Сравнить с другими моделями</li>
+  <li>Повторить тест после дообучения</li>
+</ul>
+
+<strog><h3>[ Теперь у нас есть объективные данные. Это — основа для принятия решений, а не гадание. ]</strog></h3>
+
+    <a href="#" class="back-link" onclick="if(document.referrer) { history.back(); return false; } else { window.location.href='index.html'; return false; }">
+      ⟵ Back
+    </a>
+  </article>
+</main>
+
+<footer>
+  AI Lab — лаборатория локальных моделей и безопасности ИИ
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/neuro.js"></script>
+</body>
+</html>

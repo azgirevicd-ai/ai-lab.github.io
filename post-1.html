@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Lab — Установка локальной модели Qwen 2.5</title>
+  
+  <!-- ИСПРАВЛЕНО: Правильное и полное подключение худых кибер-шрифтов от Google -->
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <canvas id="neuro-canvas"></canvas>
+  <div class="header-container">
+    <h1 class="matrix-title">AI Lab⚙️</h1>
+    <div class="subtitle">«Лучшее — враг хорошего.»</div>
+    <nav>
+      <a href="index.html">🧬 HOME</a>
+      <a href="EXPERIMENTS.html">🔬 EXPERIMENTS</a>
+      <a href="ENGINEERING.html" class="category-btn active" data-category="ENGINEERING">⚙️ ENGINEERING</a>
+      <a href="SECURITY.html">🛡️ SECURITY</a>
+      <a href="IDEAS.html">💡 IDEAS</a>
+      <a href="about.html">📩 ABOUT</a>
+    </nav>
+  </div>
+</header>
+
+<main class="post-main-container">
+
+  <!-- 1. Отдельный изолированный блок для названия темы -->
+ <div class="post-title-card">
+  <h1>Установка своей первой LLM на локальный ПК</h1>
+</div>
+
+  <!-- 3. Основной блок контента -->
+<article class="post-content">
+<div class="spec-grid" style="margin-bottom: 24px;">
+  <!-- Живые дата и время -->
+  <div class="spec-item"><strong>SESSION_TIME:</strong> <span id="live-clock" style="color: #F5C542;">CONNECTING...</span></div>
+  <div class="spec-item"><strong>SESSION_DATE:</strong> <span id="live-date" style="color: #F5C542;">SYNCING...</span></div>
+  
+  <!-- IP-адрес посетителя -->
+  <div class="spec-item"><strong>REMOTE_ADDR:</strong> <span id="user-ip" style="color: #00ff66; font-weight: bold;">[SCANNING...]</span></div>
+  <div class="spec-item"><strong>REMOTE_LOC:</strong> <span id="user-geo" style="color: #A8C7FF;">[LOCATING...]</span></div>
+
+  </div>
+<a href="#" class="back-link" onclick="if(document.referrer) { history.back(); return false; } else { window.location.href='index.html'; return false; }">
+      ⟵ Back
+    </a>    
+    
+<img src="images/pub1/olama.png" alt="Ollama Logo" style="width: 200px; height: 200px; float: left; margin-right: 20px; margin-bottom: 10px; border-radius: 15px;">
+<p><strong>Дисклеймер:</strong> Я не программист и не сисадмин. Весь этот путь я проделал с ИИ-ассистентом, который объяснял мне каждый шаг. Если получилось у меня — получится и у вас.</p>
+
+<h3>[ ПОСТАНОВКА ЗАДАЧИ ]</h3>
+<p>Цель: за один вечер скачать, установить и запустить собственную нейросеть.</p>
+<p>Без интернета. Без цензуры. Полностью на своём железе.</p>
+<p>Результат превзошёл ожидания: модель работает быстро, а Python-обвязка открыла путь к автономным экспериментам.</p>
+
+<h3>[ ЧТО ВАМ ПОНАДОБИТСЯ ]</h3>
+<ul>
+  <li><strong>Видеокарта NVIDIA с 8+ ГБ видеопамяти</strong> (у меня RTX 3060 Ti).</li>
+  <li><strong>Желание разобраться</strong> и немного терпения.</li>
+  <li><strong>ИИ-ассистент под рукой</strong> (Claude, ChatGPT, Gemini — любой). Он сэкономит вам часы гугления.</li>
+</ul>
+
+<h3>[ ШАГ 1: УСТАНОВКА OLLAMA ]</h3>
+<p><strong>Ollama</strong> — это среда запуска, которая позволяет скачивать и запускать языковые модели одной командой.</p>
+<ul>
+  <li>Скачайте установщик с официального сайта <strong>ollama.com</strong>.</li>
+  <li>Запустите и установите, как обычную программу.</li>
+  <li>После установки Ollama будет висеть в фоновом режиме. Всё.</li>
+</ul>
+
+<h3>[ ШАГ 2: ВЫБОР МОДЕЛИ — МОЯ БОЛЬ ]</h3>
+<p>Моя логика была простой: «Чем больше параметров — тем умнее». Я скачал модель на <strong>14 миллиардов параметров</strong>.</p>
+<p>Она работала. Но отвечала <strong>слишком долго</strong>. Это было невыносимо.</p>
+<p><strong>Вывод для вас:</strong></p>
+<ul>
+  <li>Если у вас <strong>8 ГБ VRAM</strong> — берите модели <strong>7B</strong> (7 миллиардов параметров). Они влезают полностью и работают быстро.</li>
+  <li>Если <strong>12+ ГБ VRAM</strong> — можно пробовать 13B-14B, но с запасом по памяти всё равно лучше 7B.</li>
+</ul>
+<p>Для своих экспериментов я остановился на <strong>русскоязычной 7B-модели без цензуры</strong> в формате GGUF.</p>
+
+<h3>[ ГДЕ ВЗЯТЬ МОДЕЛЬ ]</h3>
+<p>Модели скачиваются с <strong>huggingface.co</strong> — это крупнейший репозиторий бесплатных открытых моделей. Там тысячи вариантов под любые задачи.</p>
+<p>Модели в формате <strong>GGUF</strong> (Guided GNU Unified Format) легко загружаются в Ollama одной командой через командную строку:</p>
+<p><code>ollama run hf.co/{автор}/{название-модели}:{квантование}</code></p>
+<p>Пример:<code>ollama run hf.co/bartowski/qwen2.5-7b-uncensored-ru-GGUF:Q4_K_M</code></p>
+
+<p>Здесь <code>Q4_K_M</code> — это тип квантования (сжатие модели для экономии памяти). Для 7B-моделей это оптимальный баланс качества и скорости.</p>
+
+<h3>[ НА ЧТО ОБРАТИТЬ ВНИМАНИЕ ПРИ ВЫБОРЕ ]</h3>
+<ul>
+  <li><strong>Размер:</strong> 7B для 8 ГБ VRAM.</li>
+  <li><strong>Язык:</strong> если собираетесь дообучать модель на русском языке — ищите модели с пометкой «ru» или «russian tuned».</li>
+  <li><strong>Цензура:</strong> берите «uncensored» или «abliterated», если не хотите ограничений.</li>
+</ul>
+
+<h3>[ ШАГ 3: НАСТРОЙКА PYTHON ДЛЯ РАБОТЫ С МОДЕЛЬЮ ]</h3>
+<p>Ollama даёт API, через которое можно общаться с моделью из кода на Python. Это открывает безграничные возможности для автоматизации.</p>
+<p><strong>Установка библиотек:</strong></p>
+
+<details style="margin: 20px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: #1a1a1a; color: #ccc;">
+  <summary style="cursor: pointer; padding: 5px; user-select: none;">
+    
+    🐍 УСТАНОВКА PYTHON (нажми, чтобы развернуть)
+  </summary>
+  <div style="margin-top: 10px;">
+
+    <p>Python — это язык программирования, через который мы будем общаться с моделью. Если он у вас уже установлен — пропустите этот шаг.</p>
+
+    <p><strong>Как установить:</strong></p>
+    <ol>
+      <li>Зайдите на официальный сайт <strong>python.org/downloads</strong>.</li>
+      <li>Скачайте установщик для вашей системы (Windows, macOS, Linux).</li>
+      <li><strong>Важно:</strong> на первом экране установки поставьте галочку <strong>«Add Python to PATH»</strong>. Без этого команды Python не будут работать из терминала.</li>
+      <li>Нажмите «Install Now» и дождитесь окончания установки.</li>
+    </ol>
+
+    <p><strong>Проверка установки:</strong></p>
+    <p>Откройте терминал (Win+R → cmd → Enter) и выполните:</p>
+    <pre><code>python --version</code></pre>
+    <p>Если вы увидели <code>Python 3.x.x</code> — всё готово. Если появилась ошибка — Python не добавлен в PATH, переустановите его с галочкой.</p>
+
+    <p><strong>Дополнительно: pip</strong></p>
+    <p>pip — это менеджер пакетов Python. Он устанавливается автоматически вместе с Python. Проверьте его:</p>
+    <pre><code>pip --version</code></pre>
+    <p>Через pip мы будем ставить все библиотеки для работы с моделью.</p>
+
+  </div>
+</details>
+
+<details style="margin: 15px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: #1a1a1a; color: #ccc;">
+  <summary style="cursor: pointer; padding: 6px; user-select: none;">
+    📦 УСТАНОВКА БИБЛИОТЕК PYTHON (нажми, чтобы развернуть)
+  </summary>
+  <div style="margin-top: 15px;">
+
+    <p>Для работы с моделью через код понадобится несколько библиотек. Откройте терминал (командную строку) и по очереди выполните эти команды:</p>
+
+    <pre><code># 1. Основная библиотека для HTTP-запросов к Ollama API
+pip install requests
+
+# 2. Работа с JSON (обычно встроена, но лучше проверить)
+pip install json5
+
+# 3. Библиотека для даты и времени (пригодится для логов)
+pip install datetime
+
+# 4. Регулярные выражения — для парсинга ответов модели
+pip install re
+
+# 5. NumPy — работа с массивами чисел (понадобится для обработки данных)
+pip install numpy</code></pre>
+
+    <p><strong>Что делает каждая библиотека в проекте:</strong></p>
+    <ul>
+      <li><strong>requests</strong> — отправляет HTTP-запросы к Ollama API. Через неё модель получает промпт и возвращает ответ.</li>
+      <li><strong>json / json5</strong> — разбирает JSON-ответы от модели. Ollama возвращает данные в JSON-формате, их нужно парсить.</li>
+      <li><strong>datetime</strong> — проставляет временные метки в логах. Пригодится, когда модель пишет дневник экспериментов.</li>
+      <li><strong>re</strong> — регулярные выражения. Нужны, чтобы вытаскивать из ответа модели конкретные части (например, оценку Судьи от 1 до 5).</li>
+      <li><strong>numpy</strong> — работа с числовыми массивами. Пригодится позже, когда модель начнёт анализировать данные телеметрии или результаты тестов.</li>
+    </ul>
+
+    <p><strong>Важно:</strong> все эти библиотеки бесплатны и занимают минимум места. Установка займёт не больше минуты.</p>
+
+  </div>
+</details>
+<details style="margin: 20px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: #1a1a1a; color: #ccc;">
+  <summary style="cursor: pointer; padding: 5px; user-select: none;">
+ 📶 ПРОВЕРКА СВЯЗИ: БАЗОВЫЙ СКРИПТ (нажми, чтобы развернуть)
+  </summary>
+<p>Создайте текстовый файл и переименуйте его в <code>test_ollama.py</code> , откройте через блокнот и вставте туда этот код.</p>
+
+<pre><code>import requests
+import json
+
+# Адрес Ollama API (работает локально)
+url = "http://localhost:11434/api/generate"
+
+# Данные запроса
+data = {
+    "model": "qwen2.5:7b",           # замените на название вашей модели
+    "prompt": "Привет! Расскажи, кто ты и что умеешь.",
+    "stream": False,                 # False — получить ответ целиком
+    "options": {
+        "temperature": 0.7,          # креативность: 0 = строго, 1 = свободно
+        "num_predict": 200           # максимальная длина ответа в токенах
+    }
+}
+
+# Отправляем запрос
+print("📡 Отправка запроса к модели...")
+response = requests.post(url, json=data, timeout=60)
+
+# Разбираем ответ
+if response.status_code == 200:
+    result = response.json()
+    print("✅ Модель отвечает:")
+    print("-" * 50)
+    print(result["response"])
+    print("-" * 50)
+    print(f"⏱ Время ответа: {result.get('total_duration', 0) / 1e9:.2f} сек.")
+    print(f"📊 Потреблено токенов: {result.get('eval_count', 0)}")
+else:
+    print(f"❌ Ошибка {response.status_code}: {response.text}")
+</code></pre>
+<p>Откройте командную строку , введите команду <code>"python"</code> и укажите путь к файлу по примеру : <code>"python D:\Папка\test_ollama.py"</code></p>
+<p><strong>Ожидаемый результат:</strong></p>
+<p>Если связка Python + Ollama работает, вы увидите осмысленный ответ модели с указанием времени и количества токенов.</p>
+<p><strong>Частая ошибка:</strong> если скрипт ругается на <code>connection refused</code> — Ollama не запущена. Откройте её через меню Пуск или выполните в терминале <code>ollama serve</code>.</p>
+
+<img src="images/pub1/cod.png" alt="Ollama Logo" style="width: 1100px; height: 600px; float: left; margin-right: 20px; margin-bottom: 10px; border-radius: 15px;">
+</p>
+</details>
+<h3>[ ШАГ 4: ЧТО ДАЛЬШЕ ]</h3>
+<p>С этого момента у вас есть <strong>свой личный ИИ</strong>, который:</p>
+<ul>
+  <li>Работает без интернета.</li>
+  <li>Не передаёт ваши данные сторонним серверам.</li>
+  <li>Не имеет встроенной цензуры (если вы выбрали такую модель).</li>
+  <li>Может быть дообучен под ваши задачи через LoRA.</li>
+</ul>
+<h3>[ РЕЗУЛЬТАТЫ И ПЛАНЫ ]</h3>
+<p>Я уже написал на Python целую экосистему для своей модели.</p>
+<p>Она участвует в логических дуэлях («Кремниевый ринг»), оценивает себя сама через второго агента-Судью, а ценные результаты сохраняет в файл для будущего дообучения. Но это уже тема для отдельного поста.</p>
+<p><strong>Вывод:</strong> Локальный ИИ — это не магия. Это инструмент, который можно собрать за один вечер. И он уже работает в моей лаборатории.</p>
+
+    <a href="#" class="back-link" onclick="if(document.referrer) { history.back(); return false; } else { window.location.href='index.html'; return false; }">
+      ⟵ Back
+    </a>
+  </article>
+
+</main>
+
+<footer>
+  AI Lab — лаборатория локальных моделей и безопасности ИИ
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/neuro.js"></script>
+</body>
+</html>
+
+

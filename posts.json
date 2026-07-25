@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "⚙️ Как я установил свою первую LLM на локальный ПК",
+    "date": "7 июн 2026",
+    "category": "ENGINEERING",
+    "status": "COMPLETED",
+    "icon": "images/pub1/olama.png",
+    "url": "post-1.html"
+  },
+  {
+    "id": 2,
+    "title": "⚙️ Бенчмарк локальной модели: полный гайд",
+    "date": "8 июн 2026",
+    "category": "ENGINEERING",
+    "status": "COMPLETED",
+    "icon": "images/pub2/olama.png",
+    "url": "post-2.html"
+  },
+  {
+    "id": 3,
+    "title": "💡 Категории мышления для ИИ",
+    "date": "25 июл 2026",
+    "category": "IDEAS",
+    "status": "ACTIVE",
+    "icon": "images/pub3/1.png",
+    "url": "post-3.html"
+  }
+]
